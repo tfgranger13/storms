@@ -25,6 +25,7 @@ dotnet add package Microsoft.EntityFrameworkCore.Tools
 dotnet add package Microsoft.AspNetCore.Components.QuickGrid
 dotnet add package Microsoft.AspNetCore.Components.QuickGrid.EntityFrameworkAdapter
 dotnet add package Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore
+dotnet add package CsvHelper
 ```
 3. Create a Model folder in the root directory and a model for the entity (storms.Models.Storm)
 4. Scaffold the model to create the pages needed for CRUD functionality within the app by running the following cli command from the project's root directory:
