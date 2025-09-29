@@ -1,0 +1,89 @@
+@page "/storms/create"
+@using Microsoft.EntityFrameworkCore
+@using storms.Models
+@inject IDbContextFactory<Storms.Data.StormContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Create</PageTitle>
+
+<h1>Create</h1>
+
+<h2>Storm</h2>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <EditForm method="post" Model="Storm" OnValidSubmit="AddStorm" FormName="create" Enhance>
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger" role="alert"/>
+            <div class="mb-3">
+                <label for="id" class="form-label">ID:</label> 
+                <InputText id="id" @bind-Value="Storm.Id" class="form-control" /> 
+                <ValidationMessage For="() => Storm.Id" class="text-danger" /> 
+            </div>   
+            <div class="mb-3">
+                <label for="basin" class="form-label">Basin:</label> 
+                <InputText id="basin" @bind-Value="Storm.Basin" class="form-control" /> 
+                <ValidationMessage For="() => Storm.Basin" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="cyclonenumber" class="form-label">CycloneNumber:</label> 
+                <InputNumber id="cyclonenumber" @bind-Value="Storm.CycloneNumber" class="form-control" /> 
+                <ValidationMessage For="() => Storm.CycloneNumber" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="year" class="form-label">Year:</label> 
+                <InputNumber id="year" @bind-Value="Storm.Year" class="form-control" /> 
+                <ValidationMessage For="() => Storm.Year" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="name" class="form-label">Name:</label> 
+                <InputText id="name" @bind-Value="Storm.Name" class="form-control" /> 
+                <ValidationMessage For="() => Storm.Name" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="longitude" class="form-label">Longitude:</label> 
+                <InputText id="longitude" @bind-Value="Storm.Longitude" class="form-control" /> 
+                <ValidationMessage For="() => Storm.Longitude" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="latitude" class="form-label">Latitude:</label> 
+                <InputText id="latitude" @bind-Value="Storm.Latitude" class="form-control" /> 
+                <ValidationMessage For="() => Storm.Latitude" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="islandfall" class="form-label">IsLandfall:</label> 
+                <InputCheckbox id="islandfall" @bind-Value="Storm.IsLandfall" class="form-check-input" /> 
+                <ValidationMessage For="() => Storm.IsLandfall" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="landfalldatetime" class="form-label">LandfallDateTime:</label> 
+                <InputDate id="landfalldatetime" @bind-Value="Storm.LandfallDateTime" class="form-control" /> 
+                <ValidationMessage For="() => Storm.LandfallDateTime" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="maxwindspeed" class="form-label">MaxWindSpeed:</label> 
+                <InputNumber id="maxwindspeed" @bind-Value="Storm.MaxWindSpeed" class="form-control" /> 
+                <ValidationMessage For="() => Storm.MaxWindSpeed" class="text-danger" /> 
+            </div>        
+            <button type="submit" class="btn btn-primary">Create</button>
+        </EditForm>
+    </div>
+</div>
+
+<div>
+    <a href="/storms">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromForm]
+    private Storm Storm { get; set; } = new();
+
+    // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task AddStorm()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.Storm.Add(Storm);
+        await context.SaveChangesAsync();
+        NavigationManager.NavigateTo("/storms");
+    }
+}

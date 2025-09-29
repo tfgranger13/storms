@@ -1,0 +1,44 @@
+@page "/storms"
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using storms.Models
+@using Storms.Data
+@implements IAsyncDisposable
+@inject IDbContextFactory<Storms.Data.StormContext> DbFactory
+
+<PageTitle>Index</PageTitle>
+
+<h1>Index</h1>
+
+<p>
+    <a href="storms/create">Create New</a>
+</p>
+
+<QuickGrid Class="table" Items="context.Storm">
+    <PropertyColumn Property="storm => storm.Basin" />
+    <PropertyColumn Property="storm => storm.CycloneNumber" />
+    <PropertyColumn Property="storm => storm.Year" />
+    <PropertyColumn Property="storm => storm.Name" />
+    <PropertyColumn Property="storm => storm.Longitude" />
+    <PropertyColumn Property="storm => storm.Latitude" />
+    <PropertyColumn Property="storm => storm.IsLandfall" />
+    <PropertyColumn Property="storm => storm.LandfallDateTime" />
+    <PropertyColumn Property="storm => storm.MaxWindSpeed" />
+
+    <TemplateColumn Context="storm">
+        <a href="@($"storms/edit?id={storm.Id}")">Edit</a> |
+        <a href="@($"storms/details?id={storm.Id}")">Details</a> |
+        <a href="@($"storms/delete?id={storm.Id}")">Delete</a>
+    </TemplateColumn>
+</QuickGrid>
+
+@code {
+    private StormContext context = default!;
+
+    protected override void OnInitialized()
+    {
+        context = DbFactory.CreateDbContext();
+    }
+
+    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+}
