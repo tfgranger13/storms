@@ -32,17 +32,17 @@ dotnet add package CsvHelper
 ```
 dotnet aspnet-codegenerator blazor CRUD -dbProvider sqlite -dc Storms.Data.StormContext -m Storm -outDir Components/Pages
 ```
-5. Create the database schema using EF Core's Migration feature by running the following cli commands from the project's root directory:
+5. Create the database schema using EF Core's Migration feature by running the following cli commands from the project's root directory. These comands can also be used to update the database when changes are made to the model:
 ```
-dotnet ef migrations add InitialCreate
+dotnet ef migrations add InitialCreate // replace "InitialCreate" with a meaningful message when updating the model
 dotnet ef database update
 ```
-6. Create the ETL pipeline to load the HURDAT2 data into the database and add block to Program.cs to run when the app starts
-
-Extra scripts not needed, add seeding etl to startup
-6. Install dotnet-script to allow running C# scripts by using the following cli command:
-```
-dotnet tool install --global dotnet-script
-```
-
+6. Create the ETL pipeline to load the HURDAT2 data into the database and add a block to Program.cs to run the ETL script when the server starts
 7. Create and run the ETL pipeline to load the HURDAT2 data into the database
+
+
+To make changes to the model/database after it has been created, you will need to stop the server, then make a migration and update the database with that migration by running the following cli commands from the project's root directory:
+```
+dotnet ef migrations add [ReworkStormModel]
+dotnet ef database update
+```

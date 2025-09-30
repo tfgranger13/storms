@@ -13,7 +13,6 @@
 
 <p>
 The following table lists all storms that have made landfall in Florida since 1900.<br />
-The time of landfall is provided in UTC.<br />
 The maximum wind speed is provided in knots (1 knot = 1.15078 miles per hour).
 </p>
 
@@ -21,10 +20,9 @@ The maximum wind speed is provided in knots (1 knot = 1.15078 miles per hour).
 
 <div>
     <div>
-        <label for="yearFilter">Filter by Year:</label>
+        <label for="yearFilter">Filter by Date:</label>
         <input type="search" @bind="yearFilter" @bind:event="oninput" />
     </div>
-    <br />
     <div>
         <label for="nameFilter">Filter by Name:</label>
         <input type="search" @bind="nameFilter" @bind:event="oninput" />
@@ -32,23 +30,9 @@ The maximum wind speed is provided in knots (1 knot = 1.15078 miles per hour).
 </div>
 
 <QuickGrid Class="table" Items="FilteredStorms" Pagination="pagination">
-    @* <PropertyColumn Property="storm => storm.Basin" /> *@
-    @* <PropertyColumn Property="storm => storm.CycloneNumber" /> *@
-    <PropertyColumn Property="storm => storm.Year" Sortable="true" InitialSortDirection="SortDirection.Ascending" IsDefaultSortColumn="true" />
     <PropertyColumn Property="storm => storm.Name" Sortable="true" />
-    @* <PropertyColumn Property="storm => storm.Longitude" /> *@
-    @* <PropertyColumn Property="storm => storm.Latitude" /> *@
-    @* <PropertyColumn Property="storm => storm.IsLandfall" /> *@
-    <PropertyColumn Property="storm => storm.LandfallDateTime" Sortable="true" Title="Date of Landfall (UTC)" />
+    <PropertyColumn Property="storm => storm.LandfallDate" Sortable="true" Title="Date of Landfall" IsDefaultSortColumn="true" InitialSortDirection="SortDirection.Ascending" />
     <PropertyColumn Property="storm => storm.MaxWindSpeed" Sortable="true" Title="Maximum Wind Speed (knots)" />
-
-    <TemplateColumn Context="storm" Title="Actions">
-        @* <a href="@($"storms/edit?id={storm.Id}")">Edit</a> *@
-        @* | *@
-        <a href="@($"storms/details?id={storm.Id}")">Details</a>
-        @* | *@
-        @* <a href="@($"storms/delete?id={storm.Id}")">Delete</a> *@
-    </TemplateColumn>
 </QuickGrid>
 <Paginator State="pagination" />
 
@@ -68,7 +52,6 @@ The maximum wind speed is provided in knots (1 knot = 1.15078 miles per hour).
     private string yearFilter = string.Empty;
 
     private IQueryable<Storm> FilteredStorms => 
-        context.Storm.Where(s => s.Name!.Contains(nameFilter.ToUpper())
-                                    && s.Year.ToString().Contains(yearFilter) 
+        context.Storm.Where(s => s.Name!.Contains(nameFilter.ToUpper()) && s.LandfallDate.ToString().Contains(yearFilter) 
         );
 }

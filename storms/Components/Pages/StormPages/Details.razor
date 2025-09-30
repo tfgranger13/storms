@@ -17,27 +17,17 @@
     }
     else {
         <dl class="row">
-            <dt class="col-sm-2">Basin</dt>
-            <dd class="col-sm-10">@storm.Basin</dd>
-            <dt class="col-sm-2">CycloneNumber</dt>
-            <dd class="col-sm-10">@storm.CycloneNumber</dd>
-            <dt class="col-sm-2">Year</dt>
-            <dd class="col-sm-10">@storm.Year</dd>
+            <dt class="col-sm-2">ID</dt>
+            <dd class="col-sm-10">@storm.Id</dd>
             <dt class="col-sm-2">Name</dt>
             <dd class="col-sm-10">@storm.Name</dd>
-            <dt class="col-sm-2">Longitude</dt>
-            <dd class="col-sm-10">@storm.Longitude</dd>
-            <dt class="col-sm-2">Latitude</dt>
-            <dd class="col-sm-10">@storm.Latitude</dd>
-            <dt class="col-sm-2">IsLandfall</dt>
-            <dd class="col-sm-10">@storm.IsLandfall</dd>
-            <dt class="col-sm-2">LandfallDateTime</dt>
-            <dd class="col-sm-10">@storm.LandfallDateTime</dd>
+            <dt class="col-sm-2">LandfallDates</dt>
+            <dd class="col-sm-10">@storm.LandfallDate</dd>
             <dt class="col-sm-2">MaxWindSpeed</dt>
             <dd class="col-sm-10">@storm.MaxWindSpeed</dd>
         </dl>
         <div>
-            <a href="@($"/storms/edit?id={storm.Id}")">Edit</a> |
+            @* <a href="@($"/storms/edit?id={storm.Id}")">Edit</a> | *@
             <a href="@($"/storms")">Back to List</a>
         </div>
     }
