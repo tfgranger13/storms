@@ -1,6 +1,6 @@
 This pipeline is designed to parse HURDAT2 data from a csv file, identify storms that have had landfall in Florida since 1900, and write the output to a csv file to be read by the Blazor app.
 
-To run this pipeline (shown commands are for Windows cmd):
+To run this pipeline on Windows, run the following CLI commands from '\storms\etl':
 1. Create a virtual environment
 ```
 python -m venv storms_venv
