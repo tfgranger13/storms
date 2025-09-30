@@ -29,7 +29,7 @@ Requirements:
     - https://dotnet.microsoft.com/download/dotnet
 
 1. Clone the repository to your machine.
-2. Run the following CLI commands from the root directory to install the necessary packages:
+2. Run the following CLI commands from the root directory (\storms\storms) to install the necessary packages:
 ```
 dotnet tool install --global dotnet-aspnet-codegenerator
 dotnet tool install --global dotnet-ef
