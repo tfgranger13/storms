@@ -81,7 +81,7 @@ def etl_pipeline():
                     landfall_date = None
                     max_wind_speed = 0
 
-        output_filename = '../storms/wwwroot/Data/py_parsed_rev_geo.csv'
+        output_filename = '../storms/wwwroot/Data/HURDAT2_fl_parsed.csv'
         with open(output_filename, 'w', newline='') as csvfile:
             fieldnames = ['Id', 'Name', 'LandfallDate', 'MaxWindSpeed']
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)

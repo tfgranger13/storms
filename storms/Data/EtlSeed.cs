@@ -36,7 +36,7 @@ public class EtlSeed
 
         List<Storm> dataStorms = [];
         // string filePath = "wwwroot\\Data\\py_parsed_landfall_identifier.csv";
-        string filePath = "wwwroot\\Data\\py_parsed_rev_geo.csv";
+        string filePath = "wwwroot\\Data\\HURDAT2_fl_parsed.csv";
         var lines = File.ReadAllLines(filePath);
         var dataLines = lines.Skip(1); // Skip header line
         foreach (var line in dataLines)
