@@ -35,8 +35,11 @@ if (!app.Environment.IsDevelopment())
     app.UseMigrationsEndPoint();
 }
 
-app.UseHttpsRedirection();
+// minimal API for delivering Storms data
+app.MapGet("/storms_api", async (StormContext db) =>
+    await db.Storm.ToListAsync());
 
+app.UseHttpsRedirection();
 
 app.UseAntiforgery();
 

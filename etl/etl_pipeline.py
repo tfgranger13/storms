@@ -1,5 +1,5 @@
 # This pipeline is designed to parse the HURDAT2 dataset to identify all storms since 1900 that have had landfall in Florida.
-# It will write the results to a CSV file including the ID, Name, Date of Landfall, and Maximum Wind Speed
+# It will write the results to a CSV file including the ID, Name, Date of Landfall, and Maximum Wind Speed.
 # This output will then be read to populate the Blazor app database to display in the UI.
 # It will also be available to download from the UI.
 
@@ -20,8 +20,6 @@ def etl_pipeline():
                 cache_control=True  # Respect Cache-Control headers if present
             )
 
-    # string filePath = "wwwroot\\Data\\HURDAT2_2025-09-26.csv";
-    # string filePath = "wwwroot\\Data\\hurdat2-sample.csv";
     with open('../storms/wwwroot/Data/HURDAT2_2025-09-26.csv', mode='r') as file:
         csv_reader = csv.reader(file)
         data_storms = []
@@ -41,7 +39,7 @@ def etl_pipeline():
                 remaining_entries = int(row[2].strip())
             elif row[0].strip(): # Process as storm entry row
                 temp_landfall_date = pd.to_datetime(row[0].strip()[:8], format='%Y%m%d').date()
-                temp_identifier = row[2].strip()
+                # temp_identifier = row[2].strip() # using reverse geocoding instead of landfall identifier
                 temp_latitude = float(row[4].strip()[:-1])
                 temp_longitude = float(row[5].strip()[:-1])
                 temp_max_wind_speed = int(row[6].strip())
@@ -57,12 +55,14 @@ def etl_pipeline():
                 ):
                     resp = rev_geo_api(session, temp_latitude, temp_longitude)
                     print("API Response:", resp)
-                    time.sleep(1) # To avoid hitting API rate limits during testing
+                    time.sleep(1) # To avoid hitting API rate limits
                     if resp is not None and "error" in resp:
                         print(f"Error: {resp.get("error")}")
-                    elif resp is not None and "address" in resp and resp.get("address").get("state") == "Florida": # and "address" in resp 
+                    elif resp is not None and "address" in resp and resp.get("address").get("state") == "Florida":
                         landfall_date = temp_landfall_date
-                    # if temp_identifier == "L" :
+                    
+                    # Alternate logic if using Landfall identifier from HURDAT2 data
+                    # if temp_identifier == "L": 
                     #     landfall_date = temp_landfall_date
 
                 remaining_entries -= 1
@@ -97,7 +97,7 @@ def rev_geo_api(session, lat, long):
     headers = {
         'User-Agent': 'FloridaStormLandfall/1.0 (contact: tfgranger13@gmail.com)'
     }
-    # https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=-34.44076&lon=-58.70521
+    # Documentation for this API call found at: https://nominatim.org/release-docs/develop/api/Reverse/
     url = f"https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat={lat}&lon=-{long}&zoom=5&addressdetails=1"
     try:
         response = session.get(url, headers=headers)
