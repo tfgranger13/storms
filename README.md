@@ -16,6 +16,8 @@ https://nominatim.org/release-docs/develop/api/Reverse/
 Utilizes HURDAT2 file from the NOAA:  
 https://www.aoml.noaa.gov/hrd/hurdat/Data_Storm.html
 
+The ETL pipeline to process the HURDAT2 file is located in the 'etl' folder with a separate README for instructions.
+
 Steps to build locally:
 
 Requirements:
