@@ -39,6 +39,7 @@ dotnet add package CsvHelper
 ```
 3. Instantiate the database using the following CLI commands:
 ```
+dotnet aspnet-codegenerator blazor -dbProvider sqlite -dc Storms.Data.StormContext -m Storm
 dotnet ef migrations add InitialCreate
 dotnet ef database update
 ```
