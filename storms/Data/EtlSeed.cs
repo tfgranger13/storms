@@ -1,13 +1,18 @@
 using Microsoft.EntityFrameworkCore;
 using storms.Models;
 using Storms.Data;
-using System.IO;
-using System.Linq;
 
 namespace storms.Data;
 
 public class EtlSeed
 {
+    /* 
+    This method is called from Program.cs to seed the database when the server is started for the first time.
+    It will read the parsed HURDAT2 csv file from the ETL pipeline and add to the database.
+    This data will be displayed on the site in a table and available for download as a CSV file.
+    It is not a continuous pipeline, so any additional files that need to be processed using the ETL pipeline
+    and will require changes to this code and a redeploy of the application.
+    */
     public static void Initialize(IServiceProvider serviceProvider)
     {
         using var context = new StormContext(
@@ -22,134 +27,31 @@ public class EtlSeed
 
         if (context.Storm.Any())
         {
-            // does not add data if any data already exists in the database
-            //return;
+            // return; // does not run code below if any data already exists in the database
 
-            // For testing, clear out existing data and re-add
+            // While testing, clear out existing data to reprocess the input
             context.Storm.RemoveRange(context.Storm);
             context.SaveChanges();
         }
 
-
-        Storm testStorm1 = new()
-        {
-            Id = "AL012024",
-            Basin = "AL",
-            CycloneNumber = 1,
-            Year = 2024,
-            Name = "ARTHUR",
-            Longitude = "-75.0",
-            Latitude = "35.0",
-            IsLandfall = true,
-            LandfallDateTime = DateTime.Now,
-            MaxWindSpeed = 60
-        };
-
-        Storm testStorm2 = new()
-        {
-            Id = "AL022024",
-            Basin = "AL",
-            CycloneNumber = 2,
-            Year = 2024,
-            Name = "BEA",
-            Longitude = "14.0",
-            Latitude = "15.0",
-            IsLandfall = false,
-            LandfallDateTime = DateTime.Now,
-            MaxWindSpeed = 60
-        };
-
-        Storm testStorm3 = new()
-        {
-            Id = "AL032024",
-            Basin = "AL",
-            CycloneNumber = 3,
-            Year = 2024,
-            Name = "CHARLES",
-            Longitude = "-75.0",
-            Latitude = "-30.0",
-            IsLandfall = true,
-            LandfallDateTime = DateTime.Now,
-            MaxWindSpeed = 60
-        };
-
-        List<Storm> testStorms = [];
-        testStorms.Add(testStorm1);
-        testStorms.Add(testStorm2);
-        testStorms.Add(testStorm3);
-
-
-        // Parse the HURDAT2 data file for storms with landfall in FL to add to the database
-        // update model, there can be multiple landfall dates per storm
-        string filePath = "./wwwroot/Data/HURDAT2_2025-09-26.csv";
-        var lines = File.ReadAllLines(filePath);
         List<Storm> dataStorms = [];
-
-        
-        // foreach (var line in lines)
-        // {
-        //     string id = "";
-        //     string basin = "";
-        //     int cycloneNumber = 0;
-        //     int year = 0;
-        //     string name = "";
-        //     string longitude = "";
-        //     string latitude = "";
-        //     bool isLandfall = false;
-        //     DateTime landfallDateTime = DateTime.MinValue;
-        //     int maxWindSpeed = 0;
-
-        //     int remainingEntries = 0;
-        //     int tempYear = 0;
-        //     int tempMonth = 0;
-        //     int tempDay = 0;
-        //     int tempHour = 0;
-        //     int tempMinute = 0;
-        //     string tempIdentifier = "";
-        //     string tempLongitude = "";
-        //     string tempLatitude = "";
-        //     int tempMaxWindSpeed = 0;
-
-        //     var fields = line.Split(',');
-
-        //     if (remainingEntries == 0) // && fields.Length == 3?
-        //     {
-        //         id = fields[0].Trim();
-        //         basin = id[..2];
-        //         cycloneNumber = int.Parse(id.Substring(2, 2));
-        //         year = int.Parse(id.Substring(4, 4));
-        //         name = fields[1].Trim();
-        //         remainingEntries = int.Parse(fields[2].Trim());
-        //     }
-        //     else // if (remainingEntries > 0) // && fields.Length == 21?
-        //     {
-        //         tempYear = int.Parse(fields[0].Trim()[..4]);
-        //         tempMonth = int.Parse(fields[0].Trim().Substring(4, 2));
-        //         tempDay = int.Parse(fields[0].Trim().Substring(6, 2));
-        //         tempHour = int.Parse(fields[1].Trim()[..2]);
-        //         tempMinute = int.Parse(fields[1].Trim().Substring(2, 2));
-        //         tempIdentifier = fields[2].Trim();
-        //         tempLongitude = "";
-        //         tempLatitude = "";
-        //         tempMaxWindSpeed = int.Parse(fields[6].Trim());
-
-        //         if (tempMaxWindSpeed > maxWindSpeed) maxWindSpeed = tempMaxWindSpeed;
-
-        //         remainingEntries--;
-        //     }
-        // }
-
-        List<Storm> addStorms = [];
-        foreach (var s in testStorms)
+        // string filePath = "wwwroot\\Data\\py_parsed_landfall_identifier.csv";
+        string filePath = "wwwroot\\Data\\HURDAT2_fl_parsed.csv";
+        var lines = File.ReadAllLines(filePath);
+        var dataLines = lines.Skip(1); // Skip header line
+        foreach (var line in dataLines)
         {
-            if (s.IsLandfall)
+            var fields = line.Split(',');
+            dataStorms.Add(new Storm
             {
-                addStorms.Add(s);
-            }
+                Id = fields[0],
+                Name = fields[1],
+                LandfallDate = DateOnly.ParseExact(fields[2], "yyyy-MM-dd"),
+                MaxWindSpeed = int.Parse(fields[3])
+            });
         }
 
-        context.Storm.AddRange(addStorms);
-
+        context.Storm.AddRange(dataStorms);
         context.SaveChanges();
     }
 }

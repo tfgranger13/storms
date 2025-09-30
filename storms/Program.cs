@@ -13,6 +13,15 @@ builder.Services.AddQuickGridEntityFrameworkAdapter();
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
+// Enable API Explorer for Swagger UI testing
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddOpenApiDocument(config =>
+{
+    config.DocumentName = "StormAPI";
+    config.Title = "StormAPI v1";
+    config.Version = "v1";
+});
+
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
@@ -35,8 +44,24 @@ if (!app.Environment.IsDevelopment())
     app.UseMigrationsEndPoint();
 }
 
-app.UseHttpsRedirection();
+// minimal API for delivering Storms data
+app.MapGet("/storms_api", async (StormContext db) =>
+    await db.Storm.ToListAsync());
 
+// Enable Swagger middleware in dev environment only
+if (app.Environment.IsDevelopment())
+{
+    app.UseOpenApi();
+    app.UseSwaggerUi(config =>
+    {
+        config.DocumentTitle = "TodoAPI";
+        config.Path = "/swagger";
+        config.DocumentPath = "/swagger/{documentName}/swagger.json";
+        config.DocExpansion = "list";
+    });
+}
+
+app.UseHttpsRedirection();
 
 app.UseAntiforgery();
 
