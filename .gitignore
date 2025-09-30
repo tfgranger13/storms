@@ -503,11 +503,6 @@ node_modules/
 *.iml
 
 # Other common files to ignore
-appsettings.Development.json
-appsettings.Production.json
-appsettings.Staging.json
-appsettings.json
-appsettings.*.json
 wwwroot/dist/
 **/wwwroot/lib
 
